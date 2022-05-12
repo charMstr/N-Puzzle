@@ -1,6 +1,7 @@
 use std::num::ParseIntError;
 use std::io;
 use std::fmt;
+use rand::Rng;
 
 #[cfg(test)]
 mod test;
@@ -32,11 +33,29 @@ impl Puzzle {
 
     /// this method build a random puzzle with the puzzle size gave in argument
     /// input : Puzzle::new_from_input(3)   output : vec!(0..9)
+    /// this constructor will be usefull to have a determinated state in order to run some tests on the other functions
     fn new_from_input(size: u8) -> Puzzle {
         let puz : Puzzle = Puzzle {
             grid: (0..size*size).map(u8::from).collect(),
             size
         };
+        puz
+    }
+
+    /// this method build a random puzzle with the puzzle size gave in argument
+    /// input : Puzzle::new_from_input_random(3)   output : random UNIQUE value beetween 0..size*size
+    fn new_from_input_random(size: u8) -> Puzzle {
+        let mut rng = rand::thread_rng();
+
+        let mut tab: Vec<u8> = (0..size*size).map(u8::from).collect();
+        let mut my_grid: Vec<u8> = Vec::new();
+
+        while tab.len() > 0 {
+            let r = rng.gen_range(0..tab.len());
+            my_grid.push(tab[r]);
+            tab.remove(r);
+        }
+        let puz : Puzzle = Puzzle { grid: my_grid, size };
         puz
     }
 
@@ -154,6 +173,11 @@ impl Puzzle {
         }
         false
     }
+
+    /// this function will return the index to go in order to make the best move
+    fn get_best_move() -> usize {
+        3
+    }
 }
 
 
@@ -170,10 +194,16 @@ fn main() -> Result<(), ParseIntError> {
             return Result::Err(e);
         }
     };
-    println!(" my choice is ! {}",choice);
 
-    let my_puzzle = Puzzle::new_from_input(choice);
+    let my_puzzle = Puzzle::new_from_input_random(choice);
     println!("my puzzle : {}",my_puzzle);
+
+    let mut i=0;
+    while !my_puzzle.is_win() && i < 3 {
+        i += 1;
+        //my_puzzle.move_cell(cell);
+        println!("my puzzle : {}",my_puzzle);
+    }
 
     Ok(())
 }

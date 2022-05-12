@@ -8,6 +8,10 @@ fn puzzle_functions() {
 
     let mut puzzle_test = crate::Puzzle::new_from_input(3);
 
+    // test new puzzle random
+    let mut puzzle_random_test = crate::Puzzle::new_from_input_random(3);
+    println!("random puzzle : {}",puzzle_random_test);
+
     // get blanc cell index OK
     assert_eq!(puzzle_test.get_blanck_cell_index(),0);
     assert_eq!(puzzle_test.grid[0],0);
